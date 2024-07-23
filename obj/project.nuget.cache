@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "njNzY751UF8=",
+  "success": true,
+  "projectFilePath": "E:\\Tasks\\ImageFetcherWithCurl\\ImageFetcherWithCurl.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Faisal\\.nuget\\packages\\htmlagilitypack\\1.11.61\\htmlagilitypack.1.11.61.nupkg.sha512"
+  ],
+  "logs": []
+}

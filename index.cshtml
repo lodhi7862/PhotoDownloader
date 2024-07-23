@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Fetcher</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+        .container {
+            width: 80%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 20px;
+            font-size: 16px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+        #image-container {
+            margin-top: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+        }
+        .image-item {
+            position: relative;
+        }
+        .image-item img {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Image Fetcher</h1>
+        <input type="text" id="urlInput" placeholder="Enter website URL">
+        <button onclick="fetchImages()">Fetch Images</button>
+        <div id="image-container"></div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+    <script>
+        async function fetchImages() {
+            const url = document.getElementById('urlInput').value;
+            if (!url) {
+                alert('Please enter a URL.');
+                return;
+            }
+
+            try {
+                const response = await fetch(`/fetch-images?url=${encodeURIComponent(url)}`);
+                const imageUrls = await response.json();
+                const container = document.getElementById('image-container');
+                container.innerHTML = '';
+                
+                imageUrls.forEach(imageUrl => {
+                    const imageItem = document.createElement('div');
+                    imageItem.classList.add('image-item');
+                    
+                    const a = document.createElement('a');
+                    a.href = imageUrl;
+                    a.dataset.fancybox = "gallery";
+                    
+                    const img = document.createElement('img');
+                    img.src = imageUrl;
+                    img.alt = 'Image';
+                    
+                    a.appendChild(img);
+                    imageItem.appendChild(a);
+                    container.appendChild(imageItem);
+                });
+
+                // Initialize Fancybox
+                $().fancybox({
+                    selector: '[data-fancybox="gallery"]',
+                    loop: true,
+                    buttons: [
+                        'slideShow',
+                        'fullScreen',
+                        'thumbs',
+                        'close'
+                    ]
+                });
+            } catch (error) {
+                console.error('Error fetching images:', error);
+            }
+        }
+    </script>
+</body>
+</html>
